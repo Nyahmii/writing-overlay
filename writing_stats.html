@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Writing Stats</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: transparent; /* Changed to transparent for OBS overlay */
+      color: #e6f5d0;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.2em;
+      width: 100%;
+      height: 100%;
+      /* Removed background-image from body unless it's a transparent overlay you want */
+      /* If you want the mushroom border on the container, move it there or keep it on body if it's the full background */
+      /* background-image: url('https://i.imgur.com/VAlKkKR.png'); */
+      /* background-size: cover; */
+      /* background-repeat: no-repeat; */
+      /* background-position: center; */
+    }
+
+    .container {
+      background-color: rgba(15, 28, 22, 0.85); /* Slightly transparent dark green */
+      border: 2px solid #9ed5b2; /* Cool green border */
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 500px;
+      box-shadow: 0 0 15px #678d73; /* Subtle shadow */
+      /* If you want the mushroom image to act as a border for the container, you can add it here: */
+      /* background-image: url('https://i.imgur.com/VAlKkKR.png'); */
+      /* background-size: cover; */
+      /* background-repeat: no-repeat; */
+      /* background-position: center; */
+    }
+
+    h2 {
+      font-size: 1.5em;
+      color: #b8e994; /* Light green for headers */
+      margin-bottom: 10px;
+      border-bottom: 2px dashed #b8e994;
+      padding-bottom: 5px;
+    }
+
+    .stat {
+      margin-bottom: 10px;
+    }
+
+    .label" {\n      font-weight: bold;\n      color: #d0ffd0; /* Lighter green for labels */\n    }\n\n    .value {\n      color: #ffffff; /* White for values */\n    }\n\n    ".quote {
+      font-style: italic;
+      margin-top: 20px;
+      color: #ccc; /* Grey for quotes */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📝 Writing Progress</h2>
+    <div class="stat"><span class="label">Words Today:</span> <span class="value" id="words_today">Loading...</span></div>
+    <div class="stat"><span class="label">Total Words:</span> <span class="value" id="total_words">Loading...</span></div>
+    <div class="stat"><span class="label">Chapter:</span> <span class="value" id="chapter_progress">Loading...</span></div>
+    <div class="stat"><span class="label">Streak:</span> <span class="value" id="writing_streak">Loading...</span></div>
+    <div class="stat"><span class="label">Project:</span> <span class="value" id="project_name">Loading...</span></div>
+
+    <h2>📚 Reading Corner</h2>
+    <div class="stat"><span class="label">Now Reading:</span> <span class="value" id="current_book">Loading...</span></div>
+    <div class="stat quote" id="quote_of_the_day">Loading...</div>
+    <div class="stat"><span class="label">Ambience:</span> <span class="value" id="background_ambience">Loading...</span></div>
+  </div>
+
+  <script>
+    // REPLACE this with the Web App URL you got from Google Apps Script deployment
+    const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbyPbPyb-osFP_VIkQDahcb98W75ckSySfyNgegb66qyeCRGsqP1K_KzArC6-1s854Y/exec'; // Example: 'https://script.google.com/macros/s/AKfycbzzzzzzzzzzzzzzzzzzzzzzzzz/exec';
+
+    async function fetchAndDisplayStats() {
+      try {
+        const response = await fetch(GOOGLE_SHEET_API_URL);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        // Update HTML elements with fetched data
+        document.getElementById('words_today').textContent = data.words_today || 'N/A';
+        document.getElementById('total_words').textContent = data.total_words || 'N/A';
+        document.getElementById('chapter_progress').textContent = data.chapter_progress || 'N/A';
+        document.getElementById('writing_streak').textContent = data.writing_streak || 'N/A';
+        document.getElementById('project_name').textContent = data.project_name || 'N/A';
+        document.getElementById('current_book').textContent = data.current_book || 'N/A';
+        document.getElementById('quote_of_the_day').textContent = data.quote_of_the_day || 'N/A';
+        document.getElementById('background_ambience').textContent = data.background_ambience || 'N/A';
+
+      } catch (error) {
+        console.error('Error fetching or parsing data:', error);
+        // Optionally update elements to show an error state
+        document.getElementById('words_today').textContent = 'Error!';
+        // ... and so on for other elements if you wish
+      }
+    }
+
+    // Call the function immediately when the page loads
+    fetchAndDisplayStats();
+
+    // Refresh data every 30 seconds (adjust as needed)
+    setInterval(fetchAndDisplayStats, 30000); // 30000 milliseconds = 30 seconds
+  </script>
+</body>
+</html>
