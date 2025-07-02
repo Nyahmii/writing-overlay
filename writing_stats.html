@@ -50,7 +50,6 @@
       margin-bottom: 10px;
     }
 
-    /* FIXED: Removed extra quotation mark */
     .label {
       font-weight: bold;
       color: #d0ffd0; /* Lighter green for labels */
@@ -60,7 +59,6 @@
       color: #ffffff; /* White for values */
     }
 
-    /* FIXED: Removed extra quotation mark */
     .quote {
       font-style: italic;
       margin-top: 20px;
@@ -84,30 +82,44 @@
   </div>
 
   <script>
-    // **CRITICAL FIX:** Updated to your NEW Apps Script Web App URL
+    // Your Apps Script Web App URL
     const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycby5HQj1OaRNw2Vcnnz1N9Rh7mGxzoWv5q2N9XQNX4WgXNjpdRbwyhfXIXLizcRitgFS/exec'; 
+    
+    console.log('--- Script Init ---');
+    console.log('GOOGLE_SHEET_API_URL:', GOOGLE_SHEET_API_URL);
+    console.log('Type of GOOGLE_SHEET_API_URL:', typeof GOOGLE_SHEET_API_URL);
+    console.log('--- End Script Init ---');
 
     async function fetchAndDisplayStats() {
+      console.log('Function fetchAndDisplayStats called.');
+      console.log('Attempting to fetch from URL:', GOOGLE_SHEET_API_URL); // Log the URL *before* the fetch call
+
       try {
         const response = await fetch(GOOGLE_SHEET_API_URL);
+        console.log('Fetch response received. Status:', response.status); // Log the HTTP status code
+
         if (!response.ok) {
+          const errorText = await response.text(); // Try to get error body
+          console.error(`HTTP error! status: ${response.status}`, errorText); 
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        console.log('Data successfully parsed:', data); // Log the parsed JSON data
 
         // Update HTML elements with fetched data
-        document.getElementById('words_today').textContent = data['Word Count (Today)'] || 'N/A';
-        document.getElementById('total_words').textContent = data['Total Word Count'] || 'N/A';
-        document.getElementById('chapter_progress').textContent = data['Chapter Progress'] || 'N/A';
-        document.getElementById('writing_streak').textContent = data['Writing Streak'] || 'N/A';
-        document.getElementById('project_name').textContent = data['Project Name'] || 'N/A';
+        document.getElementById('words_today').textContent = data['Words Today'] || 'N/A'; 
+        document.getElementById('total_words').textContent = data['Total Words'] || 'N/A'; 
+        document.getElementById('chapter_progress').textContent = data['Chapter'] || 'N/A'; 
+        document.getElementById('writing_streak').textContent = data['Streak'] || 'N/A'; 
+        document.getElementById('project_name').textContent = data['Project'] || 'N/A'; 
         document.getElementById('current_book').textContent = data['Current Book'] || 'N/A';
         document.getElementById('quote_of_the_day').textContent = data['Quote of the Day'] || 'N/A';
         document.getElementById('background_ambience').textContent = data['Background Ambience'] || 'N/A';
+        console.log('HTML elements updated successfully.');
 
       } catch (error) {
-        console.error('Error fetching or parsing data:', error);
-        // Optionally update elements to show an error state
+        console.error('An error occurred during fetch or data parsing:', error);
+        // Update elements to show an error state
         document.getElementById('words_today').textContent = 'Error!';
         document.getElementById('total_words').textContent = 'Error!';
         document.getElementById('chapter_progress').textContent = 'Error!';
