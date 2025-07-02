@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OBS Debug Test</title>
+  <title>OBS JavaScript Test</title>
   <style>
     body {
-      background-color: transparent;
-      color: white;
+      background-color: transparent; /* For OBS overlay */
+      color: yellow; /* Make text clearly visible */
       font-family: sans-serif;
       font-size: 2em;
       margin: 0;
@@ -16,46 +16,32 @@
   </style>
 </head>
 <body>
-  <div id="status">Loading...</div>
+  <div id="testStatus">JavaScript Not Running</div>
 
-  <script type="module">
-    console.log('--- Module Script Init ---');
-    document.getElementById('status').textContent = 'Script loaded!';
+  <script>
+    // This script runs when the page loads
+    console.log('--- TEST SCRIPT LOADED ---');
+    document.getElementById('testStatus').textContent = 'JavaScript Is Running!';
+    console.log('Document ID "testStatus" updated.');
 
-    const testVar = "Hello from script!";
-    console.log('testVar:', testVar);
-    console.log('Type of testVar:', typeof testVar);
+    // Let's try to fetch something
+    const TEST_URL = 'https://jsonplaceholder.typicode.com/todos/1'; // A simple public API for testing
+    console.log('Attempting simple fetch from:', TEST_URL);
 
-    // This is your actual Apps Script URL
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5HQj1OaRNw2Vcnnz1N9Rh7mGxzoWv5q2N9XQNX4WgXNjpdRbwyhfXIXLizcRitgFS/exec';
-
-    async function fetchData() {
-      console.log('fetchData function called.');
-      document.getElementById('status').textContent = 'Fetching data...';
-      try {
-        console.log('Attempting to fetch from:', APPS_SCRIPT_URL);
-        const response = await fetch(APPS_SCRIPT_URL);
-        console.log('Fetch response received. Status:', response.status);
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error(`HTTP error! Status: ${response.status}`, errorText);
-          document.getElementById('status').textContent = `HTTP Error ${response.status}!`;
-          return;
+    fetch(TEST_URL)
+      .then(response =>" {\n            console.log('Fetch response status:', response.status);\n            if (!response.ok) {\n              return response.text().then(text => Promise.reject(new Error(`HTTP Error: ${response.status}" - ${text}`)));
         }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Fetch successful, data:', data);
+        document.getElementById('testStatus').textContent = `Data Fetched: ${data.title}`;
+      })
+      .catch(error => {
+        console.error('Fetch/Parse Error:', error);
+        document.getElementById('testStatus').textContent = 'Fetch Failed! Check console.';
+      });
 
-        const data = await response.json();
-        console.log('Parsed data:', data);
-        document.getElementById('status').textContent = `Data: ${data['Words Today'] || 'N/A'} | ${data['Current Book'] || 'N/A'}`;
-
-      } catch (error) {
-        console.error('An error occurred during fetch or data parsing:', error);
-        document.getElementById('status').textContent = `Fetch/Parse Error! Check console.`;
-      }
-    }
-
-    fetchData();
-    setInterval(fetchData, 15000); // Refresh every 15 seconds
   </script>
 </body>
 </html>
