@@ -50,18 +50,7 @@
       margin-bottom: 10px;
     }
 
-    /* FIXED: Removed extra quotation mark */
-    .label {
-      font-weight: bold;
-      color: #d0ffd0; /* Lighter green for labels */
-    }
-
-    .value {
-      color: #ffffff; /* White for values */
-    }
-
-    /* FIXED: Removed extra quotation mark */
-    .quote {
+    .label" {\n      font-weight: bold;\n      color: #d0ffd0; /* Lighter green for labels */\n    }\n\n    .value {\n      color: #ffffff; /* White for values */\n    }\n\n    ".quote {
       font-style: italic;
       margin-top: 20px;
       color: #ccc; /* Grey for quotes */
@@ -84,8 +73,8 @@
   </div>
 
   <script>
-    // **CRITICAL FIX:** Updated to your NEW Apps Script Web App URL
-    const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycby5HQj1OaRNw2Vcnnz1N9Rh7mGxzoWv5q2N9XQNX4WgXNjpdRbwyhfXIXLizcRitgFS/exec'; 
+    // REPLACE this with the Web App URL you got from Google Apps Script deployment
+    const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbyPbPyb-osFP_VIkQDahcb98W75ckSySfyNgegb66qyeCRGsqP1K_KzArC6-1s854Y/exec'; // Example: 'https://script.google.com/macros/s/AKfycbzzzzzzzzzzzzzzzzzzzzzzzzz/exec';
 
     async function fetchAndDisplayStats() {
       try {
@@ -96,26 +85,20 @@
         const data = await response.json();
 
         // Update HTML elements with fetched data
-        document.getElementById('words_today').textContent = data['Word Count (Today)'] || 'N/A';
-        document.getElementById('total_words').textContent = data['Total Word Count'] || 'N/A';
-        document.getElementById('chapter_progress').textContent = data['Chapter Progress'] || 'N/A';
-        document.getElementById('writing_streak').textContent = data['Writing Streak'] || 'N/A';
-        document.getElementById('project_name').textContent = data['Project Name'] || 'N/A';
-        document.getElementById('current_book').textContent = data['Current Book'] || 'N/A';
-        document.getElementById('quote_of_the_day').textContent = data['Quote of the Day'] || 'N/A';
-        document.getElementById('background_ambience').textContent = data['Background Ambience'] || 'N/A';
+        document.getElementById('words_today').textContent = data.words_today || 'N/A';
+        document.getElementById('total_words').textContent = data.total_words || 'N/A';
+        document.getElementById('chapter_progress').textContent = data.chapter_progress || 'N/A';
+        document.getElementById('writing_streak').textContent = data.writing_streak || 'N/A';
+        document.getElementById('project_name').textContent = data.project_name || 'N/A';
+        document.getElementById('current_book').textContent = data.current_book || 'N/A';
+        document.getElementById('quote_of_the_day').textContent = data.quote_of_the_day || 'N/A';
+        document.getElementById('background_ambience').textContent = data.background_ambience || 'N/A';
 
       } catch (error) {
         console.error('Error fetching or parsing data:', error);
         // Optionally update elements to show an error state
         document.getElementById('words_today').textContent = 'Error!';
-        document.getElementById('total_words').textContent = 'Error!';
-        document.getElementById('chapter_progress').textContent = 'Error!';
-        document.getElementById('writing_streak').textContent = 'Error!';
-        document.getElementById('project_name').textContent = 'Error!';
-        document.getElementById('current_book').textContent = 'Error!';
-        document.getElementById('quote_of_the_day').textContent = 'Error!';
-        document.getElementById('background_ambience').textContent = 'Error!';
+        // ... and so on for other elements if you wish
       }
     }
 
